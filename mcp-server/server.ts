@@ -32,7 +32,7 @@ class DerivMarketClient {
     if (this.ws?.readyState === WebSocket.OPEN) return this.ws;
     if (this.connecting) return this.connecting;
 
-    this.connecting = new Promise((resolve, reject) => {
+    const connection = new Promise<WebSocket>((resolve, reject) => {
       const ws = new WebSocket(
         'wss://ws.derivws.com/websockets/v3?app_id=' + encodeURIComponent(DERIV_APP_ID)
       );
@@ -53,9 +53,13 @@ class DerivMarketClient {
       ws.once('close', () => {
         if (this.ws === ws) this.ws = null;
       });
-    }).finally(() => { this.connecting = null; });
+    });
+    this.connecting = connection;
+    void connection.finally(() => {
+      if (this.connecting === connection) this.connecting = null;
+    });
 
-    return this.connecting;
+    return connection;
   }
 
   async request<T>(payload: Record<string, unknown>): Promise<T> {
