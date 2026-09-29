@@ -23,7 +23,8 @@ export function generateMetadata(): Metadata {
   const faviconUri = buildFaviconUri();
   return {
     title: process.env.NEXT_PUBLIC_DERIV_APP_NAME?.trim() || 'Deriv Accumulators Trading App',
-    description: 'A white-label accumulator trading application powered by Deriv',
+    description: 'A lightweight Deriv accumulator trading application powered by Deriv.',
+    manifest: '/manifest.webmanifest',
     ...(faviconUri ? { icons: { icon: faviconUri } } : {}),
   };
 }
