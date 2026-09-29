@@ -1,0 +1,16 @@
+{
+  "name": "TradeHubz Accumulator",
+  "short_name": "TradeHubz",
+  "description": "Lightweight Deriv accumulator trading interface.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0b0f19",
+  "theme_color": "#0b0f19",
+  "icons": [
+    {
+      "src": "/logo.jpg",
+      "sizes": "192x192",
+      "type": "image/jpeg"
+    }
+  ]
+}
