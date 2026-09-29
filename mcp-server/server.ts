@@ -1,5 +1,5 @@
 import { createServer } from 'node:http';
-import WebSocket from 'ws';
+import WebSocket, { type RawData } from 'ws';
 import { toNodeHandler } from '@modelcontextprotocol/node';
 import { createMcpHandler, McpServer } from '@modelcontextprotocol/server';
 import * as z from 'zod/v4';
@@ -65,7 +65,7 @@ class DerivMarketClient {
     return new Promise<T>((resolve, reject) => {
       const timer = setTimeout(() => { cleanup(); reject(new Error('Deriv API request timeout')); }, 15000);
 
-      const onMessage = (raw: WebSocket.RawData) => {
+      const onMessage = (raw: RawData) => {
         try {
           const data = JSON.parse(raw.toString()) as Record<string, unknown>;
           if (data.req_id !== reqId) return;
@@ -281,7 +281,7 @@ function buildServer(): McpServer {
       return { ...analysis, riskPlan: riskPlan({ direction: analysis.direction, stake, growthRate, takeProfit, stopLoss }) };
     }));
     const markets = results
-      .filter((r): r is PromiseFulfilledResult<ReturnType<typeof analyzePrices> & { riskPlan: ReturnType<typeof riskPlan> }> => r.status === 'fulfilled')
+      .filter(r => r.status === 'fulfilled')
       .map(r => r.value)
       .filter(a => a.confidence >= minConfidence)
       .sort((a, b) => b.confidence - a.confidence);
